@@ -37,7 +37,7 @@ def load_file_list():
 
 def preprocess(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.blur(img_gray, (5, 5), img)
+    img_gray = cv2.blur(img_gray, (5, 5), img)
     ret, threshed = cv2.threshold(img_gray, 128, 255, cv2.THRESH_OTSU)
     return threshed
 
@@ -62,7 +62,7 @@ def get_plate_value(plateContour, img):
 
         # OCR part
         cv2.imwrite('plate.jpg', crop)
-        im = Image.open(r'im.jpg')
+        im = Image.open(r'plate.jpg')
         try:
             str = image_to_string(im)
             print(str)
