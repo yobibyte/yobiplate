@@ -37,9 +37,8 @@ def load_file_list():
 
 def preprocess(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img_gray = cv2.blur(img_gray, (5, 5), img)
-    ret, threshed = cv2.threshold(img_gray, 128, 255, cv2.THRESH_OTSU)
-    return threshed
+    return cv2.adaptiveThreshold(img_gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
+
 
 def localise_plate(img):
     # plate localization
@@ -47,12 +46,14 @@ def localise_plate(img):
     # TODO Think how remove small contours
     contours = [c for c in contours if cv2.contourArea(c) > 1000]
     # TODO what if the there are many rectangles
+    ret = []
     for c in contours:
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
         if len(approx) == 4:
-            return approx
-    return None
+            ret.append(approx)
+    # TODO get appropriate contour, not the first one
+    return ret[0]
 
 def get_plate_value(plateContour, img):
     if plateContour is not None:
@@ -78,6 +79,7 @@ for p in img_name_list:
     img = cv2.imread(RES_FOLDER_PATH + p)
     preprocessed_img = preprocess(img)
     plateContour = localise_plate(preprocessed_img)
+    cv2.drawContours(img, plateContour, -1, COLOR, thickness=2)
     get_plate_value(plateContour, img)
     cv2.imshow(p, img)
 
