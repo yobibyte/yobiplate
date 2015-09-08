@@ -42,7 +42,7 @@ def load_file_list():
     #data = [f for f in listdir(RES_FOLDER_PATH) if path.isfile(path.join(RES_FOLDER_PATH, f)) and f[-4:] == '.jpg']
     return data
 
-def preprocess(img):g
+def preprocess(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     #We use adaptive thresholding as light conditions are often different in different part of the image
     return cv2.adaptiveThreshold(img_gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
